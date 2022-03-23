@@ -1,11 +1,12 @@
 MACRO IMPRIMIR F,C,texto
     ;FUNCION PARA IMPRIMIR UN TEXTO, DADAS UNAS COORDENADAS EN PANTALLA
-    ;F es para la posicion en X
-    ;C es para la posicion en Y
     MOV AH,02H
+    ;Posicion en X del cursor
     MOV DH,F
+    ;Posicion en Y del cursor
     MOV DL,C
     INT 10H 
+    ;El texto a imprimir en las coordenadas X,Y
     MOV dx,offset texto
     MOV ah,09h
     INT 21h

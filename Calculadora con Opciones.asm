@@ -17,9 +17,10 @@ MACRO FLUSH
     MOV BX,00H
 ENDM
 
-MACRO CONFIGURAR
-    
+MACRO CONFIGURAR 
+               
       MOV AX,0600H;Limpiar pantalla... AL = 00H limpia todos los renglones
+      
       MOV BH,5BH  ;color de fondo yletra
       MOV CX,0000H ;esquina sup.izquierda de la pantalla(0,0)
       MOV DX,184FH ;esquina inf. derecha de la pantalla(24,79)
@@ -27,7 +28,7 @@ MACRO CONFIGURAR
       
       MOV AH,02H 
       MOV DX,00H ;posiscion del cursor(0,0) despues de limpiar pantalla
-      MOV BH,00H  ;Pagina 0
+      MOV BH,00H ;Pagina 0
       INT 10H
     
 ENDM
@@ -73,6 +74,9 @@ DATOS SEGMENT
     VAL3 DB ?
     
     TXT1 DB "INSTITUTO TECNOLOGICO SUPERIOR DE LERDO$"
+    
+    LN1 DB "*******************************************************$"
+    
     TXT2 DB "LENGUAJES DE INTERFAZ$"
     TXT3 DB "DOCENTE: CHRISTIAN ALVAREZ MUNOZ$"
     TXT4 DB "ALUMNO: VICTOR HUGO CARREON PULIDO$"
@@ -178,14 +182,17 @@ IMPRIMIR_MENU:
     
     ;Imprimimos el menu principal
     CONFIGURAR
-    IMPRIMIR 2,5,OPCA
-    IMPRIMIR 5,5,OPC1
-    IMPRIMIR 6,5,OPC2
-    IMPRIMIR 7,5,OPC3
-    IMPRIMIR 8,5,OPC4
-    IMPRIMIR 9,5,OPC5
-    IMPRIMIR 10,5,OPC6
-    IMPRIMIR 12,5,OPCB
+    IMPRIMIR 1,3,LN1
+    IMPRIMIR 3,5,OPCA
+    IMPRIMIR 6,5,OPC1
+    IMPRIMIR 7,5,OPC2
+    IMPRIMIR 8,5,OPC3
+    IMPRIMIR 9,5,OPC4
+    IMPRIMIR 10,5,OPC5
+    IMPRIMIR 11,5,OPC6
+    IMPRIMIR 15,3,LN1
+    IMPRIMIR 13,5,OPCB
+    
     MOV AH,01H
     INT 21H
     

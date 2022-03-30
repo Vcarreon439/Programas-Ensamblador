@@ -13,73 +13,71 @@ ENDM
 .stack 32
 .data
 
-msm db "Ingrese un valor (entre 0 y 8): $"
-valor db ?
-str db 6 dup('$') 
+    msm db "Ingrese un valor (entre 0 y 8): $"
+    valor db ?
+    str db 6 dup('$')
 .code
    
    
-mov ax,@data;data segmenintinin yerini ax e atiyoruz
+mov ax,@data;Segmento de datos
 mov ds,ax;
 
 Solicitar_Num
 SUB al, 30h
 mov valor, al
 
-MOV CL, valor
-
-
-;mov cl,degisken;tanimlanan degisken cl ye aktariliyor sayac olarak kullanilmak icin 
-
-mov ax,1;ax in degeri isleme baslamaka icin sifirlaniyor
+MOV CL, valor ;La variable se pasa a CL para ser utilizada como contador
+mov ax,1;Reestablecer el valor de ax para comenzar el factorial
  
- 
-fakt: 
+Factorial: 
 
 
-mul cx; faktoriyerl hesabi yapmak icin cx teki deger ax registeriyle carpiliyor 
+mul cx; Para el calculo del factorial, CX se multiplica con AX
 
-loop fakt ;
+loop Factorial ;
 
 
-call number2string  ;rakami stringe donusturme fonksiyonunu cagirir
+call numeroAcadena ;Invocacion de convertir digito en cadena
 
-;ekrana yazdirma fonksiyonu
-  mov  ah, 9
+;Impresion en pantalla
   mov  dx, offset str   
+  mov  ah, 09h
   int  21h
 
-;islem bittikten sonra kullanicidan key bekler
+;Esperamos entrada del usuario
   mov  ah,7
   int  21h
 
-;programi kapatir.
+;Finalizamos el programa.
   mov  ax, 4c00h
   int  21h           
 
 ;------------------------------------------
 
-;stringe donusecek deger ax te bulunmalidir
+;El valor de la cadena debe estar en AX
 ;sayinin digitlerini teker teker cikarir
-;ve sayilari stackte saklar 
-;sayilari stackten cikarip diziye atar
+;Resta los digitos del numero, uno por uno
+;Elimina los numeros de la pila y los inserta en la matriz
 
-proc number2string
-  mov  bx, 10 ;sayilar 10 a bolunerek cikarilir bx registerine 10 atarnir 
-  mov  cx, 0 ;cikarilan sayilar icin sayac ayarlanir
+proc numeroAcadena
+                        
+  mov  bx, 10   ;Los numeros se restan dividiendo por 10, el 10 asignado a BX
+  mov  cx, 0    ;El contrador esta configurado para los numeros restados
+  
 cycle1:       
-  mov  dx, 0 ;dx teki deger sifirlanir, dx reminder olarak kullanilir 
-             ;bu bolumden kalan deger cikarilan digiti tutacak
-  div  bx ;ax teki deger bx e bolunur ax/10
-  push dx ;dx teki digit stacke eklenecek  
-  inc  cx ;cx teki sayac degeri 1 arttirilir
-  cmp  ax, 0  ;ax teki deger 0 olana kadar islem devam eder
-  jne  cycle1 ; 
+  mov  dx, 0    ;El valor en DX se reestablece, y DX se usa como apuntador
+                ;El valor restante de esta seccion contendra el digito extraido
+  div  bx       ;El valor en AX se divide por BX (10)
+  push dx       ;DX se agrega a la pila de digitos
+  inc  cx       ;El contador 'CX' se incrementa en 1
+  cmp  ax, 0    ;El proceso continua hasta que AX = 0
+  jne  cycle1    
 
-  mov  si, offset str ;degeri stringe atamaya baslaniyor
+  mov  si, offset str   ;Se asigna el valor a la cadena
+  
 cycle2:  
   pop  dx        
-  add  dl, 48 ;degerler teker teker stackten cikarilip str degiskenine ataniyor
+  add  dl, 48   ;Los valores de la pila se eliminan uno por uno y se asignan a str
   mov  [ si ], dl
   inc  si
   loop cycle2  

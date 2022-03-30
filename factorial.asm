@@ -14,6 +14,7 @@ ENDM
 .data
 
     msm db "Ingrese un valor (entre 0 y 8): $"
+    ms2 db 10,13, "El resultado es: $"
     valor db ?
     str db 6 dup('$')
 .code
@@ -38,6 +39,11 @@ loop Factorial ;
 
 
 call numeroAcadena ;Invocacion de convertir digito en cadena
+
+;Mensaje y salto de linea para mejor escritura
+  mov  dx, offset ms2
+  mov  ah, 09h
+  int  21h
 
 ;Impresion en pantalla
   mov  dx, offset str   
@@ -64,23 +70,23 @@ proc numeroAcadena
   mov  bx, 10   ;Los numeros se restan dividiendo por 10, el 10 asignado a BX
   mov  cx, 0    ;El contrador esta configurado para los numeros restados
   
-cycle1:       
+ciclo1:       
   mov  dx, 0    ;El valor en DX se reestablece, y DX se usa como apuntador
                 ;El valor restante de esta seccion contendra el digito extraido
   div  bx       ;El valor en AX se divide por BX (10)
   push dx       ;DX se agrega a la pila de digitos
   inc  cx       ;El contador 'CX' se incrementa en 1
   cmp  ax, 0    ;El proceso continua hasta que AX = 0
-  jne  cycle1    
+  jne  ciclo1
 
   mov  si, offset str   ;Se asigna el valor a la cadena
   
-cycle2:  
+ciclo2:  
   pop  dx        
   add  dl, 48   ;Los valores de la pila se eliminan uno por uno y se asignan a str
   mov  [ si ], dl
   inc  si
-  loop cycle2  
+  loop ciclo2
 
   ret
 endp  

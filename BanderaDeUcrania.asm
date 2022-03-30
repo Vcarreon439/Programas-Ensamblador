@@ -1,9 +1,14 @@
 MACRO COLOREAR esqsup,esqinf, col
-    mov ax,0600h
-    mov cx, esqsup
-    mov dx, esqinf
-    mov bh, col
-    int 10h   
+    ;Configuramos el modo de pantalla y "limpiamos"
+    MOV AX, 0600H
+    ;Configuramos la esquina superior
+    MOV CX, esqsup
+    ;Configuramos la esquina inferior
+    MOV DX, esqinf
+    ;Configuramos el color de fondo y de letra
+    MOV BH, col
+    ;
+    INT 10H
 ENDM
 
 org 100h
@@ -12,15 +17,19 @@ org 100h
     
 .code
     .startup
-
-    COLOREAR 00h, 184fh, 0e0h
-    COLOREAR 0000h, 094fh, 97H
+     
+    ;Coloreamos el color amarillo
+    COLOREAR 00H, 184FH, 0E0H
+    ;Coloreamos el color azul y configuramos el texto en gris
+    COLOREAR 0000H, 094FH, 97H
     
-    mov dx, offset msg
-    mov ah,9
-    int 21h
- 
-    mov ax,0C07h
-    int 21h 
+    ;Imprimimos el mensaje
+    MOV DX, offset msg    
+    MOV AH,09H
+    INT 21H
+          
+    ;Esperamos entrada del usuario para finalizar
+    MOV AX,0C07H
+    INT 21H
     
 end

@@ -70,8 +70,9 @@ ENDM
 .model small
 .stack 32
 .data
-
-    msm db "Ingrese a cantidad de iteraciones: $"
+    
+    presentacio db "Carreon Pulido Victor Hugo - 192310436$"
+    msm db 10,13,"Ingrese a cantidad de iteraciones: $"
     ms2 db 10,13, "El resultado es: $"
     error db 10,13, "El programa solo soporta 24 iteraciones!!$"
     espa db ",$"
@@ -93,9 +94,14 @@ MOV BX, 01      ;Guardamos en BX la base
 Iniciar:
 
     Configurar
+    
+    ;Mensaje de bienvenida
+    mov  dx, offset presentacio
+    mov  ah, 09h
+    int  21h
 
     Solicitar_Num msm, contador
-
+    
     ;Mensaje y salto de linea para mejor escritura
     mov  dx, offset ms2
     mov  ah, 09h

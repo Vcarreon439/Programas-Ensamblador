@@ -628,7 +628,15 @@ print:
         jne print
                       
         FLUSH
+        
+        CMP opcion,4
+        JA retry
+        JB retry
+        
         Imprimir msg6
+        JE  imprimirResiduo
+        
+        
                 
 imprimirResiduo:
 

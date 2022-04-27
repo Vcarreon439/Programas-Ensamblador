@@ -27,6 +27,8 @@ MACRO FLUSH
     mov bandera_1,0
     mov bandera_2,0
     
+    mov mod,10000
+        
 ENDM
 
 ;Calculadora de 2 numeros enteros de 5 digitos
@@ -59,6 +61,7 @@ db 13,10,13,10,'Tu eleccion: $'
 msg2 db 13,10,'Ingrese el primer numero: $'
 msg3 db 13,10,'Ingrese el segundo numero: $'
 msg4 db 13,10,13,10,'Resultado: $'
+msg6 db 13,10,13,10,'El residuo es: $'
 
 msg5 db 13,10,13,10,'Error de division - el denominador es 0 $'
 
@@ -69,10 +72,17 @@ bandera_2 db 0
 
 ;Contador de digitos
 counter dw 0
+
+counter2 dw 0
+
 ;Primer y segundo numero, almacenando el resultado en sum
 sum dw 0
 ;El primer numero completo se almacena en fsum
 fsum dw 0
+
+;Variable para almacenar el residuo
+residuo dw 0
+
 ;Multiplica el valor anterior con 10
 mulBy10 dw 10
 ;mod para el valor a imprimir de la division al finalizar
@@ -248,10 +258,14 @@ resume_1:
 
     
      inc counter
+     inc counter2 
      
      ; see if counter is 5 means 5 igits dare entered
      ;if not then keep asking for input
      cmp counter,5
+     jne input
+     
+     cmp counter2,5
      jne input
     
     resume_2:
@@ -267,6 +281,7 @@ resume_1:
         mov fsum,bx
         mov sum,0
         mov counter,0
+        mov counter2,0
    
     resume_3:
      
@@ -363,7 +378,9 @@ division:
                 
         mov bx,sum
         
-        idiv bx
+        div bx
+        mov residuo,dx
+        
         
         mov sum,ax
         
@@ -609,6 +626,40 @@ print:
         
         cmp counter,0
         jne print
+                      
+        FLUSH
+        Imprimir msg6
+                
+imprimirResiduo:
+
+        
+        mov ax,residuo
+        mov dx,0
+        
+        mov bx,mod
+        div bx
+        
+        mov residuo,dx
+        
+        mov dx,ax
+        add dx,48
+        mov ah,2
+        int 21h
+        
+        mov dx,0
+        mov ax,mod
+        
+        mov bx,10
+        
+        div bx
+        
+        mov mod,ax
+        
+        
+        dec counter2
+        
+        cmp counter2,0
+        jne imprimirResiduo
        
 ;Limpia los registros
 retry: 
